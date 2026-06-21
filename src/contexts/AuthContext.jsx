@@ -8,7 +8,8 @@ import {
   updateProfile
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
-import { auth, db } from '../firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { auth, db, storage } from '../firebase';
 
 const AuthContext = createContext();
 const CACHE_KEY = 'sa_user_cache';
@@ -33,10 +34,24 @@ export function AuthProvider({ children }) {
       const res = await createUserWithEmailAndPassword(auth, email, password);
       const user = res.user;
       
+      let photoURL = '';
+      if (extraDetails.profilePicFile) {
+        try {
+          const fileRef = ref(storage, `profile_pics/${user.uid}_${Date.now()}`);
+          const uploadResult = await uploadBytes(fileRef, extraDetails.profilePicFile);
+          photoURL = await getDownloadURL(uploadResult.ref);
+        } catch (e) {
+          console.error("Profile pic upload failed:", e);
+        }
+      }
+
+      const cleanExtraDetails = { ...extraDetails, profilePic: photoURL };
+      delete cleanExtraDetails.profilePicFile;
+
       // Attempt to update profile, but don't block if it's slow
       updateProfile(user, { 
         displayName: name,
-        photoURL: extraDetails.profilePic || ''
+        photoURL: photoURL
       }).catch(err => console.warn("Profile update non-critical failure:", err));
 
       const newData = {
@@ -45,7 +60,7 @@ export function AuthProvider({ children }) {
         email,
         role,
         status: role === 'driver' ? 'pending' : 'active',
-        ...extraDetails,
+        ...cleanExtraDetails,
         createdAt: new Date().toISOString(),
       };
 

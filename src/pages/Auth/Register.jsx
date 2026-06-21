@@ -34,20 +34,8 @@ const Register = () => {
       setError('');
       setLoading(true);
       
-      let photoURL = '';
-      if (profilePic) {
-        try {
-          const fileRef = ref(storage, `profile_pics/${Date.now()}_${profilePic.name}`);
-          const uploadResult = await uploadBytes(fileRef, profilePic);
-          photoURL = await getDownloadURL(uploadResult.ref);
-        } catch (uploadErr) {
-          console.error("Image upload failed:", uploadErr);
-          // Continue without photoURL if upload fails, to avoid hanging the whole signup
-        }
-      }
-
       const extraDetails = {
-        profilePic: photoURL,
+        profilePicFile: profilePic,
         ...(role === 'driver' ? {
           licenseNumber,
           cnicNumber,
