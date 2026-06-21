@@ -82,16 +82,13 @@ const BookingConfirmation = () => {
           <h1 style={{ fontSize: '48px', marginBottom: '10px' }}>Safe Travels, {userData?.name ? userData.name.split(' ')[0] : 'Passenger'}!</h1>
           <p style={{ color: 'var(--grey)', fontSize: '20px', marginBottom: '50px' }}>Your reservation is confirmed. See you at the terminal.</p>
           
-          <div style={{ 
+          <div className="ticket-grid" style={{ 
             background: 'linear-gradient(135deg, #0A0F1D 0%, #1A1A1B 100%)', 
             borderRadius: '35px', 
             padding: '50px',
             position: 'relative',
             marginTop: '20px',
             textAlign: 'left',
-            display: 'grid',
-            gridTemplateColumns: '1.2fr 0.8fr',
-            gap: '40px',
             color: 'white',
             boxShadow: '0 40px 80px rgba(0,0,0,0.3)'
           }}>
@@ -142,7 +139,7 @@ const BookingConfirmation = () => {
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', marginTop: '60px' }}>
+          <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '60px' }}>
             <button 
                onClick={() => navigate(`/track/${bus.id || 'demo-bus'}`)}
                className="btn-primary" 
@@ -169,7 +166,7 @@ const BookingConfirmation = () => {
     <div style={{ maxWidth: '850px', margin: '60px auto', animation: 'fadeIn 0.6s ease-out' }}>
       <h1 style={{ fontSize: '40px', marginBottom: '40px', fontWeight: 900 }}>Finalize Booking</h1>
       <div className="card" style={{ padding: '0', borderRadius: '35px', overflow: 'hidden' }}>
-        <div style={{ background: 'var(--dark)', padding: '40px', color: 'white', display: 'flex', gap: '40px' }}>
+        <div style={{ background: 'var(--dark)', padding: '40px', color: 'white', display: 'flex', flexWrap: 'wrap', gap: '40px' }}>
           <div style={{ 
             width: '120px', 
             height: '120px', 
@@ -192,7 +189,7 @@ const BookingConfirmation = () => {
         </div>
 
         <div style={{ padding: '50px' }}>
-           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px', marginBottom: '40px' }}>
+           <div className="booking-summary-grid">
               <div>
                  <h3 style={{ marginBottom: '20px', fontSize: '20px' }}>Trip Summary</h3>
                  <div style={{ padding: '25px', background: '#F9FAFB', borderRadius: '20px' }}>
@@ -231,7 +228,7 @@ const BookingConfirmation = () => {
 
            <div style={{ borderTop: '2px dashed #E5E7EB', paddingTop: '40px' }}>
               <h3 style={{ marginBottom: '25px', fontSize: '20px' }}>Choose Payment Method</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '40px' }}>
+              <div className="payment-method-grid">
                  <div style={{ padding: '25px', border: '3px solid var(--primary)', borderRadius: '25px', position: 'relative', cursor: 'pointer' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                        <div style={{ width: '40px', height: '40px', background: 'var(--primary)', color: 'white', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

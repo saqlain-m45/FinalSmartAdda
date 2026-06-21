@@ -103,7 +103,7 @@ const MyBookings = () => {
                 transition: 'all 0.3s ease',
               }}>
                 {/* Card Top — always visible */}
-                <div style={{ padding: '26px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ padding: '26px 32px', display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
                     {/* Bus Icon */}
                     <div style={{
@@ -122,7 +122,7 @@ const MyBookings = () => {
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 24 }}>
                     <div style={{ textAlign: 'center' }}>
                       <p style={{ margin: '0 0 3px', fontSize: 11, color: 'var(--grey)', fontWeight: 700, textTransform: 'uppercase' }}>Seats</p>
                       <p style={{ margin: 0, fontWeight: 900, fontSize: 16, color: 'var(--primary)' }}>{booking.seats?.join(', ')}</p>
@@ -151,12 +151,11 @@ const MyBookings = () => {
 
                 {/* Expanded Ticket View */}
                 {isExpanded && (
-                  <div className="dashboard-layout-grid" style={{
+                  <div className="ticket-grid" style={{
                     margin: '0 24px 24px',
                     background: 'linear-gradient(135deg, #0A0F1D 0%, #1A2535 100%)',
                     borderRadius: 24, padding: '36px 40px',
-                    display: 'grid', gridTemplateColumns: '1.4fr 0.8fr',
-                    gap: 40, color: 'white', position: 'relative',
+                    color: 'white', position: 'relative',
                     boxShadow: '0 20px 50px rgba(0,0,0,0.25)',
                   }}>
                     {/* Ticket cut-out effects */}
@@ -207,7 +206,7 @@ const MyBookings = () => {
 
                 {/* Action Buttons (always visible at bottom if expanded) */}
                 {isExpanded && (
-                  <div style={{ padding: '0 32px 24px', display: 'flex', gap: 12 }}>
+                  <div style={{ padding: '0 32px 24px', display: 'flex', flexWrap: 'wrap', gap: 12 }}>
                     <button
                       onClick={() => navigate(`/track/${booking.busId || 'demo'}`)}
                       style={{ padding: '12px 24px', background: 'var(--secondary)', color: 'var(--dark)', border: 'none', borderRadius: 14, fontWeight: 800, fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}
