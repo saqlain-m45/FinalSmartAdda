@@ -326,3 +326,28 @@ button {
     padding: 30px 20px !important;
   }
 }
+
+/* ─── Custom Page Grids ─────────────────────────────────────────── */
+.bus-details-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
+}
+@media (max-width: 900px) {
+  .bus-details-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.track-bus-grid {
+  display: grid;
+  grid-template-columns: 1fr 370px;
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 1024px) {
+  .track-bus-grid {
+    grid-template-columns: 1fr;
+  }
+}

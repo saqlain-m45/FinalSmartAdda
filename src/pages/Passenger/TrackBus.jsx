@@ -460,7 +460,7 @@ export default function TrackBus() {
   const displayEta = myEta != null ? fmtEta(myEta) : (geoOk && endCoord && myPos ? fmtEta(distKm(myPos, endCoord) / (mySpeed || 5) * 60) : '—');
 
   return (
-    <div style={{ maxWidth: 1400, margin: '0 auto', padding: '16px 0', animation: 'fadeIn .4s ease' }}>
+    <div style={{ maxWidth: 1400, margin: '0 auto', padding: '16px 20px', animation: 'fadeIn .4s ease' }}>
       <style>{`
         @keyframes myPulse{0%{transform:scale(.4);opacity:.9}70%{transform:scale(2.2);opacity:0}100%{transform:scale(.4);opacity:0}}
         @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -490,7 +490,7 @@ export default function TrackBus() {
         </select>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 370px', gap: 20, alignItems: 'start' }}>
+      <div className="track-bus-grid">
 
         {/* ══ MAP ══════════════════════════════════════════════════════════ */}
         <div style={{ borderRadius: 24, overflow: 'hidden', height: 620, position: 'relative', boxShadow: '0 14px 44px rgba(0,0,0,.17)' }}>

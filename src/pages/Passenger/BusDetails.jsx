@@ -112,8 +112,8 @@ const BusDetails = () => {
   );
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 0', animation: 'fadeIn 0.3s ease-out' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '40px' }}>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 20px', animation: 'fadeIn 0.3s ease-out' }}>
+      <div className="bus-details-grid">
         
         {/* Left Side: Seat Map */}
         <div className="card" style={{ padding: '40px' }}>
@@ -158,7 +158,7 @@ const BusDetails = () => {
             })}
           </div>
 
-          <div style={{ display: 'flex', gap: '30px', justifyContent: 'center', marginTop: '50px', borderTop: '1px solid #f0f0f0', paddingTop: '30px' }}>
+          <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '50px', borderTop: '1px solid #f0f0f0', paddingTop: '30px' }}>
              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 600 }}>
                 <div style={{ width: '20px', height: '20px', borderRadius: '6px', background: 'white', border: '2px solid #F0F2F5' }}></div> Available
              </div>
