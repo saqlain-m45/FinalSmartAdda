@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import PendingApproval from './pages/Auth/PendingApproval';
+import DriverPendingPage from './pages/Auth/DriverPendingPage';
 
 // ─── Protected Route ────────────────────────────────────────────
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -78,6 +79,7 @@ function App() {
               <Route path="/"                    element={<Home />} />
               <Route path="/login"               element={<AuthRedirect><Login /></AuthRedirect>} />
               <Route path="/register"            element={<AuthRedirect><Register /></AuthRedirect>} />
+              <Route path="/driver-pending"      element={<DriverPendingPage />} />
               <Route path="/track-bus"           element={<TrackBus />} />
               <Route path="/track/:busId"        element={<TrackBus />} />
 

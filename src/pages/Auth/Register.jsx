@@ -3,9 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
-import { FaUser, FaEnvelope, FaLock, FaUserTag, FaArrowRight, FaShieldAlt, FaIdCard, FaBus, FaAddressCard, FaCloudUploadAlt } from 'react-icons/fa';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '../../firebase';
 
 // Asset Imports
 import heroBanner from '../../assets/images/banner.png';
@@ -23,7 +20,7 @@ const Register = () => {
   const [profilePicPreview, setProfilePicPreview] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signup } = useAuth();
+  const { signup, logout } = useAuth();
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
@@ -48,9 +45,16 @@ const Register = () => {
       // The AuthContext will trigger a global state change, but we manually navigate 
       // as a backup to ensure the user isn't stuck on the loading state.
       if (user) {
-        if (user.role === 'admin') navigate('/admin');
-        else if (user.role === 'driver') navigate('/driver');
-        else navigate('/');
+        if (user.role === 'driver') {
+          // Sign out the driver immediately — they must wait for admin approval
+          // They should NOT be auto-logged in as a passenger
+          await logout();
+          navigate('/driver-pending');
+        } else if (user.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
       }
     } catch (err) {
       console.error("Registration error:", err);
