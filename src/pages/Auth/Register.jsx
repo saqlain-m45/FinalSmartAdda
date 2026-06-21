@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
+import { FaUser, FaEnvelope, FaLock, FaUserTag, FaArrowRight, FaShieldAlt, FaIdCard, FaBus, FaAddressCard, FaCloudUploadAlt } from 'react-icons/fa';
 
 // Asset Imports
 import heroBanner from '../../assets/images/banner.png';
