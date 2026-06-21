@@ -131,16 +131,6 @@ export function AuthProvider({ children }) {
               const data = snap.data();
               setUserData(data);
               localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-            } else {
-              const fallback = {
-                uid: user.uid,
-                role: user.email?.includes('admin') ? 'admin' : 'passenger',
-                status: 'active',
-                email: user.email,
-                name: user.displayName || 'User',
-              };
-              setUserData(fallback);
-              localStorage.setItem(CACHE_KEY, JSON.stringify(fallback));
             }
           },
           (err) => {
