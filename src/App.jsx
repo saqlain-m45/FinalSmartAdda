@@ -70,9 +70,7 @@ function App() {
         {/* ── Sidebar: ONLY for admin / driver panels ── */}
         {isPanelRoute && (userData?.role === 'admin' || userData?.role === 'driver') && <Sidebar />}
 
-        <main className="app-main-content" style={{
-          padding: isPanelRoute ? '28px 32px' : location.pathname === '/' ? '0' : '28px 32px'
-        }}>
+        <main className={`app-main-content ${isPanelRoute ? 'panel-content' : location.pathname === '/' ? 'home-content' : 'public-content'}`}>
           <Suspense fallback={<PageLoader />}>
             <Routes>
               {/* Public / Passenger routes */}

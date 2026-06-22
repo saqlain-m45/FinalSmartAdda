@@ -140,9 +140,15 @@ button {
 
 .app-main-content {
   flex: 1;
-  padding: 28px 32px;
-  min-width: 0; /* prevent flex overflow */
+  min-width: 0;
   overflow-x: hidden;
+}
+.app-main-content.panel-content,
+.app-main-content.public-content {
+  padding: 28px 32px;
+}
+.app-main-content.home-content {
+  padding: 0;
 }
 
 /* ─── Sidebar: always full height ───────────────────────────────── */
@@ -203,9 +209,10 @@ button {
       radial-gradient(ellipse at 15% 8%, rgba(13,124,63,.1), transparent 40%),
       linear-gradient(180deg, #F5FAF7 0%, #ECF4EE 100%);
   }
-  .app-main-layout    { display: block; }
-  .app-main-content   { padding: 14px 16px !important; }
-  .app-main-layout { flex-direction: column !important; }
+  .app-main-layout    { display: block; flex-direction: column; }
+  .app-main-content.panel-content { padding: 70px 16px 20px 16px !important; }
+  .app-main-content.public-content { padding: 14px 16px !important; }
+  .app-main-content.home-content { padding: 0 !important; }
 
   /* Dashboard responsive grids */
   .dashboard-stats-grid { grid-template-columns: 1fr 1fr !important; }

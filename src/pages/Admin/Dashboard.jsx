@@ -67,8 +67,8 @@ const Analytics = ({ stats, recentBookings, pendingDriverCount }) => {
       <div style={{
         backgroundImage: `linear-gradient(135deg,rgba(9,89,45,.97) 0%,rgba(13,124,63,.85) 100%),url(${terminalBanner})`,
         backgroundSize: 'cover', backgroundPosition: 'center',
-        padding: '45px 50px', borderRadius: 28, color: 'white',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        padding: 'clamp(24px, 5vw, 45px) clamp(20px, 5vw, 50px)', borderRadius: 28, color: 'white',
+        display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '20px',
         marginBottom: 36, boxShadow: '0 20px 50px rgba(13,124,63,.25)',
       }}>
         <div>
@@ -140,7 +140,7 @@ const Analytics = ({ stats, recentBookings, pendingDriverCount }) => {
           <span style={{ fontSize: 13, color: 'var(--grey)', fontWeight: 600 }}>{recentBookings.length} records</span>
         </div>
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '600px' }}>
             <thead>
               <tr style={{ background: '#FAFAFA' }}>
                 {['Passenger', 'Bus / Route', 'Seats', 'Amount', 'Status'].map(h => (
@@ -339,12 +339,12 @@ const DriverApprovals = () => {
 
   return (
     <div style={{ animation: 'fadeIn .3s ease-out' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: 28 }}>
         <div>
           <h1 style={{ margin: '0 0 6px', fontSize: 28, fontWeight: 900 }}>Driver Approvals</h1>
           <p style={{ margin: 0, color: 'var(--grey)', fontWeight: 600 }}>Review and manage driver registration requests</p>
         </div>
-        <div style={{ display: 'flex', gap: 10 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
           {[['PENDING', pending.length, '#FEF3C7', '#92400E'], ['APPROVED', approved.length, '#D1FAE5', '#065F46'], ['REJECTED', rejected.length, '#FEE2E2', '#991B1B']].map(([label, count, bg, color]) => (
             <div key={label} style={{ padding: '10px 20px', background: bg, borderRadius: 14, textAlign: 'center' }}>
               <p style={{ margin: 0, fontSize: 10, fontWeight: 800, color, letterSpacing: 1 }}>{label}</p>
@@ -521,13 +521,13 @@ const BusList = () => {
 
   return (
     <div style={{ animation: 'fadeIn .3s ease-out' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 26 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: 26 }}>
         <div>
           <h1 style={{ margin: '0 0 4px', fontSize: 28, fontWeight: 900 }}>Fleet Management</h1>
           <p style={{ margin: 0, color: 'var(--grey)', fontWeight: 600 }}>{buses.length} coaches registered</p>
         </div>
         <button onClick={() => { setShowAddForm(!showAddForm); setFormError(''); setFormSuccess(''); }}
-          className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 24px' }}>
+          className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 24px', width: 'max-content' }}>
           <FaPlus /> {showAddForm ? 'Cancel Form' : 'Add New Bus'}
         </button>
       </div>
@@ -549,7 +549,7 @@ const BusList = () => {
           )}
 
           <form onSubmit={handleAddBus}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14, marginBottom: 14 }}>
+            <div className="fleet-form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14, marginBottom: 14 }}>
               {fields.map(({ ph, key, type = 'text' }) => (
                 <div key={key} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   <label style={{ fontSize: 11, fontWeight: 800, color: 'var(--grey)', textTransform: 'uppercase', letterSpacing: 1 }}>
@@ -573,7 +573,7 @@ const BusList = () => {
                 </div>
               ))}
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto auto', gap: 14, alignItems: 'end' }}>
+            <div className="fleet-form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14, alignItems: 'end' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 <label style={{ fontSize: 11, fontWeight: 800, color: 'var(--grey)', textTransform: 'uppercase', letterSpacing: 1 }}>Assign Driver</label>
                 <select value={newBus.driverId} onChange={e => updateField('driverId', e.target.value)}
@@ -617,7 +617,7 @@ const BusList = () => {
         ) : buses.map(bus => (
           <div key={bus.id} style={{
             background: 'white', borderRadius: 18, padding: '20px 24px',
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '20px',
             boxShadow: '0 2px 10px rgba(0,0,0,0.05)', border: '1px solid #f0f0f0', transition: 'all .2s',
           }}
             onMouseEnter={e => e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.1)'}
@@ -725,12 +725,12 @@ const SystemUsers = () => {
 
   return (
     <div style={{ animation: 'fadeIn .3s ease-out' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: 24 }}>
         <div>
           <h1 style={{ margin: '0 0 4px', fontSize: 28, fontWeight: 900 }}>User Management</h1>
           <p style={{ margin: 0, color: 'var(--grey)', fontWeight: 600 }}>{users.length} total accounts</p>
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
           {['all', 'passenger', 'driver', 'admin'].map(r => (
             <button key={r} onClick={() => setFilter(r)}
               style={{ padding: '8px 16px', borderRadius: 12, border: 'none', fontWeight: 700, fontSize: 13, cursor: 'pointer', background: filter === r ? 'var(--primary)' : '#F3F4F6', color: filter === r ? 'white' : 'var(--dark)' }}>
@@ -741,8 +741,9 @@ const SystemUsers = () => {
       </div>
       {error && <div style={{ padding: '12px 18px', background: '#FEF3C7', borderRadius: 12, color: '#92400E', fontWeight: 600, marginBottom: 16, fontSize: 13 }}>⚠️ {error}</div>}
       <div style={{ background: 'white', borderRadius: 24, boxShadow: '0 4px 20px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '700px' }}>
+            <thead>
             <tr style={{ background: '#FAFAFA' }}>
               {['User', 'Role', 'Verification Info', 'Status', 'Actions'].map(h => (
                 <th key={h} style={{ padding: '14px 22px', color: 'var(--grey)', fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, fontWeight: 800, textAlign: 'left' }}>{h}</th>
@@ -792,6 +793,7 @@ const SystemUsers = () => {
                 ))}
           </tbody>
         </table>
+        </div>
       </div>
       <style>{`@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}`}</style>
     </div>
