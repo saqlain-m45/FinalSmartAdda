@@ -10,6 +10,8 @@ import {
   FaShieldAlt, FaUserCircle, FaMapMarkerAlt, FaClock,
   FaRoute, FaTachometerAlt, FaWhatsapp, FaPhoneAlt, FaShareAlt, FaBusAlt, FaSearch,
 } from 'react-icons/fa';
+import { Capacitor } from '@capacitor/core';
+import { Geolocation } from '@capacitor/geolocation';
 import coachDefault from '../../assets/images/coach_default.jpg';
 
 /* ─── Fix Leaflet icons (Vite) ─────────────────────────────────────────── */
@@ -468,7 +470,19 @@ export default function TrackBus() {
   useEffect(() => { busRouteRef.current = busRoute; }, [busRoute]);
 
   /* ── Actions ──────────────────────────────────────────────────────────── */
-  const enableLocation = () => {
+  const enableLocation = async () => {
+    // Capacitor Native GPS Permission Check
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const perm = await Geolocation.checkPermissions();
+        if (perm.location !== 'granted') {
+          await Geolocation.requestPermissions();
+        }
+      } catch (e) {
+        console.warn('Native GPS request error', e);
+      }
+    }
+
     // iOS 13+ Compass Permission
     if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
       DeviceOrientationEvent.requestPermission().catch(() => {});
