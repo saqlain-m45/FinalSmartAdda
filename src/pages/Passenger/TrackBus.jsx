@@ -34,15 +34,19 @@ const busIcon = (r = 0) => L.divIcon({
   iconSize: [42, 42], iconAnchor: [21, 21],
 });
 
-const myIcon = L.divIcon({
+const myIcon = (r = 0) => L.divIcon({
   className: '',
-  html: `<div style="position:relative;width:26px;height:26px">
-    <div id="my-pulse" style="position:absolute;inset:-12px;border-radius:50%;
+  html: `<div style="transform:rotate(${r}deg);width:42px;height:42px;display:flex;align-items:center;justify-content:center">
+    <div id="my-pulse" style="position:absolute;width:48px;height:48px;border-radius:50%;
       background:rgba(59,130,246,.22);animation:myPulse 1.8s ease-out infinite"></div>
-    <div style="position:absolute;inset:3px;border-radius:50%;background:#3B82F6;
-      border:3px solid #fff;box-shadow:0 0 0 2px rgba(59,130,246,.4),0 4px 10px rgba(59,130,246,.5)"></div>
-  </div>`,
-  iconSize: [26, 26], iconAnchor: [13, 13],
+    <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#1e3a8a);
+      display:flex;align-items:center;justify-content:center;border:3px solid #fff;
+      box-shadow:0 0 0 2px #3B82F6,0 6px 18px rgba(59,130,246,.55)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white" style="transform:translateY(-1px)">
+        <path d="M12 2L4 21l8-4 8 4L12 2z"/>
+      </svg>
+    </div></div>`,
+  iconSize: [42, 42], iconAnchor: [21, 21],
 });
 
 const pinIcon = (color, label) => L.divIcon({
@@ -180,10 +184,12 @@ export default function TrackBus() {
   const [myEta, setMyEta] = useState(null);
   const [myProgress, setMyProgress] = useState(0);
   const [myPos, setMyPos] = useState(null);
+  const [myRot, setMyRot] = useState(0);
   const [geoOk, setGeoOk] = useState(false);
   const [geoError, setGeoError] = useState(null);
   const [arrived, setArrived] = useState(false);
   const [showArrival, setShowArrival] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
 
   // Routes
   const [busRoute, setBusRoute] = useState([]);
@@ -208,6 +214,29 @@ export default function TrackBus() {
   const liveTimer = useRef(null);
   const lastPosRef = useRef(null);
   const lastTimeRef = useRef(null);
+  const compassActiveRef = useRef(false);
+
+  /* ── Compass Orientation ───────────────────────────────────────────────── */
+  useEffect(() => {
+    const handleOrientation = (e) => {
+      let head = e.webkitCompassHeading;
+      if (head === undefined || head === null) {
+        // Fallback for Android (absolute)
+        if (e.alpha !== null && e.absolute) head = 360 - e.alpha;
+      }
+      if (head !== undefined && head !== null && !isNaN(head)) {
+        compassActiveRef.current = true;
+        setMyRot(head);
+      }
+    };
+
+    window.addEventListener('deviceorientationabsolute', handleOrientation);
+    window.addEventListener('deviceorientation', handleOrientation);
+    return () => {
+      window.removeEventListener('deviceorientationabsolute', handleOrientation);
+      window.removeEventListener('deviceorientation', handleOrientation);
+    };
+  }, []);
 
   /* ── Map Controller Callback ───────────────────────────────────────────── */
   const setMapInstance = useCallback((map) => {
@@ -258,6 +287,24 @@ export default function TrackBus() {
     const onPos = (pos) => {
       const coords = [pos.coords.latitude, pos.coords.longitude];
 
+      // Ignore tiny drifts to prevent jitter when resting
+      let movedDistance = 0;
+      if (lastPosRef.current) {
+        movedDistance = distKm(lastPosRef.current, coords);
+        const speed = pos.coords.speed || 0;
+        // Ignore movements under 12 meters if moving slowly (< 1 m/s)
+        if (movedDistance < 0.012 && speed < 1) return;
+      }
+
+      // Update rotation (only if compass isn't providing data)
+      if (!compassActiveRef.current) {
+        if (pos.coords.heading !== null && !isNaN(pos.coords.heading)) {
+          setMyRot(pos.coords.heading);
+        } else if (lastPosRef.current && movedDistance > 0.005) {
+          setMyRot(bearing(lastPosRef.current, coords));
+        }
+      }
+
       // Update state so React knows where we are
       setGeoOk(true);
       setGeoError(null);
@@ -302,7 +349,7 @@ export default function TrackBus() {
       navigator.geolocation.clearWatch(id);
       if (liveTimer.current) clearTimeout(liveTimer.current);
     };
-  }, [refreshLiveRoute]);
+  }, [refreshLiveRoute, retryKey]);
 
   // Keep refs for closure use
   const distRef = useRef(0);
@@ -422,10 +469,20 @@ export default function TrackBus() {
 
   /* ── Actions ──────────────────────────────────────────────────────────── */
   const enableLocation = () => {
+    // iOS 13+ Compass Permission
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+      DeviceOrientationEvent.requestPermission().catch(() => {});
+    }
+
+    // Re-trigger the watchPosition hook
+    setGeoError(null);
+    setRetryKey(k => k + 1);
+
+    // Also explicitly request a single fresh position to update immediately
     navigator.geolocation?.getCurrentPosition(
       pos => {
         const c = [pos.coords.latitude, pos.coords.longitude];
-        setMyPos(c); setGeoOk(true); setGeoError(null); setFollowMe(true);
+        setMyPos(c); setGeoOk(true); setFollowMe(true);
         if (mapRef.current) {
           mapRef.current.panTo(c, { animate: true });
           if (mapRef.current.getZoom() < 14) mapRef.current.setZoom(15);
@@ -556,9 +613,9 @@ export default function TrackBus() {
               </Marker>
             )}
 
-            {/* My location dot */}
+            {/* My location arrow */}
             {myPos && (
-              <Marker position={myPos} icon={myIcon} zIndexOffset={1000}>
+              <Marker position={myPos} icon={myIcon(myRot)} zIndexOffset={1000}>
                 <Popup>
                   <div style={{ textAlign: 'center', fontWeight: 700 }}>
                     📍 Your Location<br />
