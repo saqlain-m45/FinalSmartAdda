@@ -68,6 +68,9 @@ const Home = () => {
       (b.to   || '').toLowerCase().includes(to.toLowerCase().trim())
     );
     setBuses(results);
+    setTimeout(() => {
+      document.getElementById('coaches-section')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   // ── Search form submit ───────────────────────────────────────
@@ -82,6 +85,9 @@ const Home = () => {
       results = results.filter(b => (b.to || '').toLowerCase().includes(searchParams.to.toLowerCase().trim()));
     }
     setBuses(results);
+    setTimeout(() => {
+      document.getElementById('coaches-section')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   // Advanced Visual Mapping for Pakistani Context
@@ -274,7 +280,7 @@ const Home = () => {
         </div>
       </section>
 
-      <div style={{ paddingBottom: '40px' }}>
+      <div id="coaches-section" style={{ paddingBottom: '40px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
           <div>
             <h2 style={{ fontSize: '32px', color: 'var(--dark)', marginBottom: '8px' }}>Available Coaches</h2>
